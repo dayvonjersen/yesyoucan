@@ -9,19 +9,23 @@ if(isset($argv[1]) && $argv[1] == '--test') {
     echo "php -f dontletyourdreamsbedreams.php | ./Markdown.pl > yesterdayyousaidtomorrow.html\n";
     exit(0);
 }
-usleep(50000); file_put_contents('php://stderr', "JUST DO IT\n");
+function meme($lol) {
+    sleep(1); file_put_contents('php://stderr', $lol);
+}
+meme("JUST DO IT\n");
 echo "<style>",str_replace("\n"," ",preg_replace("/\s+/"," ",file_get_contents('markdown.css'))),"</style>\n",
     "# Everything Which is Possible in Alphabetical Order\n\n",
     "###### Information courtesy [github.com/Fyrd/caniuse](https://github.com/Fyrd/caniuse)\n\n",
     "## More detailed information available at [caniuse.com](http://caniuse.com)\n\n",
     "###### Icons courtesy [github.com/alrra/browser-logos](https://github.com/alrra/browser-logos)\n\n",
     "###### Markdown stylesheet courtesy [github.com/jasonm23/markdown-css-themes](http://jasonm23.github.io/markdown-css-themes)\n\n",
+    "###### Markdown courtesy [daringfireball.net](http://daringfireball.net/projects/markdown/)\n\n",
     "---\n\n";
 
 $d = dir('caniuse/features-json');
 $why_is_there_no_sortdir = [];
 chdir('caniuse/features-json');
-usleep(50000); file_put_contents('php://stderr', "JUST DO IT\n");
+meme("JUST DO IT\n");
 while(($f = $d->read()) !== false) {
     if(is_dir($f)) {
         continue;
@@ -29,14 +33,19 @@ while(($f = $d->read()) !== false) {
     $memes = json_decode(file_get_contents($f));
     $why_is_there_no_sortdir[$memes->title] = $memes;
 }
-usleep(50000); file_put_contents('php://stderr', "DON'T LET YOUR DREAMS BE DREAMS\n");
-ksort($why_is_there_no_sortdir);
+meme("DON'T LET YOUR DREAMS BE DREAMS\n");
+uksort($why_is_there_no_sortdir, function($a,$b){
+    return strcmp(strtolower(substr($a,0,1)),strtolower(substr($b,0,1)));
+});
 $browsers = ['firefox','chrome','opera','safari','ie','edge'];
 $logo = [];
-usleep(50000); file_put_contents('php://stderr', "YESTERDAY YOU SAID TOMORROW\n");
+meme("YESTERDAY YOU SAID TOMORROW\n");
+echo '<style>.',join(',.',$browsers),'{display:inline-block;height:16px;width:16px}';
 foreach($browsers as $browser)
-    $logo[$browser] = base64_encode(file_get_contents("../../logos/$browser.png"));
-usleep(50000); file_put_contents('php://stderr', "SO JUST-\n");
+    echo ".$browser{background-image:url(data:image/png;base64,",base64_encode(file_get_contents("../../logos/$browser.png")),")}";
+echo '</style>',"\n";
+meme("SO JUST-\n"); sleep(1);
+$dramatic_pause = floor(count($why_is_there_no_sortdir)/5); $i = 0;
 $shia = ['DO IT', 'MAKE YOUR DREAMS COME TRUE', 'JUST-DO IT', 'YES YOU CAN', 'JUST DO IT'];
 foreach($why_is_there_no_sortdir as $seriously => $wtf) {
     if(is_null($wtf))
@@ -51,13 +60,13 @@ foreach($why_is_there_no_sortdir as $seriously => $wtf) {
             foreach($versions as $version => $supported) {
                 if(strstr($supported,"y") || strstr($supported,"a")) {
                     $supported = true;
-                    echo "![$browser](data:image/png;base64,{$logo[$browser]}) $version ";
+                    echo "<div aria-label='$browser' class='$browser'></div> $version ";
                     break;
                 }
             }
         }
     }
-    usleep(50000); file_put_contents('php://stderr', $shia[array_rand($shia)]."\n");
+    if( ++$i >= $dramatic_pause ) { meme(array_shift($shia)."\n"); $i=0; }
     echo !$supported ? "*No browser support*" : '',"\n\n",
         " - [",$wtf->spec,"](",$wtf->spec,")\n\n";
     if(is_array($wtf->links) || is_object($wtf->links)){
@@ -66,4 +75,4 @@ foreach($why_is_there_no_sortdir as $seriously => $wtf) {
     }
     echo "\n---\n";
 }
-usleep(50000); file_put_contents('php://stderr', "If you are tired of starting over, stop giving up.\n");
+meme("If you are tired of starting over, stop giving up.\n");
